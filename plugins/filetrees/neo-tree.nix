@@ -1167,6 +1167,7 @@ in {
                inherit event; 
                handler = helpers.mkRaw handler;
              })
+             components
           );
 
           window = processWindowMappings window;
