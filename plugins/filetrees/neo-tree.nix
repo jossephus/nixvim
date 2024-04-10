@@ -660,8 +660,7 @@ in {
           '';
       };
       filesystem = {
-        components = {
-          name = helpers.mkNullOrOption
+        components = helpers.mkNullOrOption
           (with types; attrsOf str)
           ''
             Configuration of event handlers.
@@ -687,7 +686,6 @@ in {
             }
             ```
           '';
-        };
         window = mkWindowMappingsOption (lib.mdDoc ''
           ```nix
             {
@@ -1162,6 +1160,15 @@ in {
           mappings = processMappings mappings;
         };
         filesystem = with filesystem; {
+          components = ifNonNull' components 
+          (
+             mapAttrsToList
+             (event: handler: {
+               inherit event; 
+               handler = helpers.mkRaw handler;
+             })
+          );
+
           window = processWindowMappings window;
           async_directory_scan = asyncDirectoryScan;
           scan_mode = scanMode;
