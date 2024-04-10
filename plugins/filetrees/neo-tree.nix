@@ -660,6 +660,34 @@ in {
           '';
       };
       filesystem = {
+        components = {
+          name = helpers.mkNullOrOption
+          (with types; attrsOf str)
+          ''
+            Configuration of event handlers.
+            Attrs:
+            - keys are the events (e.g. `before_render`, `file_opened`)
+            - values are lua code defining the callback function.
+
+            Example:
+            ```nix
+            {
+              before_render = \'\'
+                function (state)
+                  -- add something to the state that can be used by custom components
+                end
+              \'\';
+
+              file_opened = \'\'
+                function(file_path)
+                  --auto close
+                  require("neo-tree").close_all()
+                end
+              \'\';
+            }
+            ```
+          '';
+        };
         window = mkWindowMappingsOption (lib.mdDoc ''
           ```nix
             {
